@@ -25,12 +25,20 @@ class Settings(BaseModel):
     GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
     
     # Database
-    DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./airbnb_clone.db")
+    DATABASE_URL: str = os.getenv(
+        "DATABASE_URL", 
+        "sqlite:////tmp/airbnb_clone.db" if os.getenv("VERCEL") == "1" else "sqlite:///./airbnb_clone.db"
+    )
     
     # Uploads
-    UPLOAD_DIR: str = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "static", "uploads")
+    UPLOAD_DIR: str = "/tmp/uploads" if os.getenv("VERCEL") == "1" else os.path.join(
+        os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "static", "uploads"
+    )
 
 settings = Settings()
 
 # Ensure upload directory exists
-os.makedirs(settings.UPLOAD_DIR, exist_ok=True)
+try:
+    os.makedirs(settings.UPLOAD_DIR, exist_ok=True)
+except Exception as e:
+    print(f"Warning: Could not create upload directory: {e}")
