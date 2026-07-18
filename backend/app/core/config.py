@@ -1,15 +1,18 @@
 import os
 from pydantic import BaseModel
 
-# Load .env file from project root if it exists
-env_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))), ".env")
-if os.path.exists(env_path):
-    with open(env_path, "r") as f:
-        for line in f:
-            line = line.strip()
-            if line and not line.startswith("#") and "=" in line:
-                k, v = line.split("=", 1)
-                os.environ[k.strip()] = v.strip()
+try:
+    # Load .env file from project root if it exists
+    env_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))), ".env")
+    if os.path.exists(env_path):
+        with open(env_path, "r") as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith("#") and "=" in line:
+                    k, v = line.split("=", 1)
+                    os.environ[k.strip()] = v.strip()
+except Exception as e:
+    print(f"Warning: Could not check or load local .env file (normal in Vercel): {e}")
 
 class Settings(BaseModel):
     API_V1_STR: str = "/api/v1"
