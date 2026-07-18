@@ -89,8 +89,8 @@ EXTRA_LISTINGS = [
         "beds": 3,
         "bathrooms": 2.0,
         "images": [
-            "https://images.unsplash.com/photo-1602216056096-3c40cc0c9944?auto=format&fit=crop&q=80&w=800",
-            "https://images.unsplash.com/photo-1598977123418-45f04b01f1bb?auto=format&fit=crop&q=80&w=800"
+            "https://images.unsplash.com/photo-1627894483216-2138af692e2e?auto=format&fit=crop&q=80&w=800",
+            "https://images.unsplash.com/photo-1598379439169-b5cd69abdbb3?auto=format&fit=crop&q=80&w=800"
         ],
         "amenities": ["WiFi", "Kitchen", "Air conditioning", "Workspace"]
     },
