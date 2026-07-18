@@ -9,9 +9,10 @@ from app.domains.review.models import Review
 from app.core.security import get_password_hash
 from app.extra_seed_data import EXTRA_LISTINGS
 
-def seed_db():
-    print("Clearing database...")
-    Base.metadata.drop_all(bind=engine)
+def seed_db(clear=True):
+    if clear:
+        print("Clearing database...")
+        Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
     
     db: Session = SessionLocal()
@@ -681,10 +682,29 @@ def seed_db():
             
         db.commit()
         print(f"Database successfully seeded with {len(db_listings)} rich listings!")
-    except Exception as e:
+     except Exception as e:
         db.rollback()
         print(f"Error seeding database: {e}")
         raise e
+     finally:
+        db.close()
+
+def seed_if_empty():
+    db = SessionLocal()
+    try:
+        # Check if database has any listings
+        count = db.query(Listing).count()
+        if count == 0:
+            print("No listings found. Auto-seeding database...")
+            seed_db(clear=False)
+        else:
+            print(f"Database already has {count} listings. Skipping seed.")
+    except Exception as e:
+        print(f"Auto-seeding check failed (tables may not exist yet): {e}")
+        try:
+            seed_db(clear=False)
+        except Exception as se:
+            print(f"Failed to force seed database: {se}")
     finally:
         db.close()
 

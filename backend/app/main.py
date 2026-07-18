@@ -11,6 +11,10 @@ from app.api.router import api_router
 # This makes it seamless for evaluators to run the application without running manual migrations.
 Base.metadata.create_all(bind=engine)
 
+# Auto-seed listings if database is empty on startup.
+from app.seed import seed_if_empty
+seed_if_empty()
+
 app = FastAPI(
     title=settings.PROJECT_NAME,
     description="Production-grade API for the Airbnb Clone SDE hiring assignment",
