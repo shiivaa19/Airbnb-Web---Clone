@@ -121,7 +121,22 @@ export default function BookingPanel({ listing, blockedDates = [] }: BookingPane
       return;
     }
 
-    if (!summary || error) return;
+    if (!checkIn || !checkOut) {
+      setShowDatePicker(true);
+      addToast('Please select both Check-In and Check-Out dates before reserving.', 'error');
+      return;
+    }
+
+    if (error) {
+      addToast(error, 'error');
+      return;
+    }
+
+    if (!summary) {
+      addToast('Calculating booking summary, please wait...', 'info');
+      return;
+    }
+
     setIsPaymentOpen(true);
   };
 
@@ -294,7 +309,7 @@ export default function BookingPanel({ listing, blockedDates = [] }: BookingPane
           {/* Reserve Button */}
           <button
             type="submit"
-            disabled={loading || (checkIn !== '' && checkOut !== '' && !summary)}
+            disabled={loading}
             className="w-full py-3.5 text-white font-bold rounded-lg airbnb-gradient active:scale-98 transition-transform disabled:opacity-50 cursor-pointer text-sm"
           >
             {loading ? 'Reserving...' : 'Reserve'}
