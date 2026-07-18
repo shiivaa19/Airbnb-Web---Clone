@@ -12,14 +12,17 @@ from app.core.config import settings
 from app.core.database import engine, Base
 from app.api.router import api_router
 
-# Auto-create SQLite database tables on startup.
-# This makes it seamless for evaluators to run the application without running manual migrations.
-Base.metadata.create_all(bind=engine)
-
 from contextlib import asynccontextmanager
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    # Auto-create SQLite database tables on startup.
+    # This makes it seamless for evaluators to run the application without running manual migrations.
+    try:
+        Base.metadata.create_all(bind=engine)
+    except Exception as e:
+        print(f"Error creating database tables on startup: {e}")
+
     from app.seed import seed_if_empty
     try:
         seed_if_empty()
