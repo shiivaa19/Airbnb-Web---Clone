@@ -11,15 +11,23 @@ from app.api.router import api_router
 # This makes it seamless for evaluators to run the application without running manual migrations.
 Base.metadata.create_all(bind=engine)
 
-# Auto-seed listings if database is empty on startup.
-from app.seed import seed_if_empty
-seed_if_empty()
+from contextlib import asynccontextmanager
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    from app.seed import seed_if_empty
+    try:
+        seed_if_empty()
+    except Exception as e:
+        print(f"Startup seeding error: {e}")
+    yield
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
     description="Production-grade API for the Airbnb Clone SDE hiring assignment",
     version="1.0.0",
-    openapi_url=f"{settings.API_V1_STR}/openapi.json"
+    openapi_url=f"{settings.API_V1_STR}/openapi.json",
+    lifespan=lifespan
 )
 
 # CORS Configuration
