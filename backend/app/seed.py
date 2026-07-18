@@ -682,11 +682,11 @@ def seed_db(clear=True):
             
         db.commit()
         print(f"Database successfully seeded with {len(db_listings)} rich listings!")
-     except Exception as e:
+    except Exception as e:
         db.rollback()
         print(f"Error seeding database: {e}")
         raise e
-     finally:
+    finally:
         db.close()
 
 def seed_if_empty():
