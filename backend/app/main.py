@@ -19,10 +19,17 @@ app = FastAPI(
 )
 
 # CORS Configuration
-# Standard React/Next.js default port is 3000, Vite is 5173.
+# Allows localhost for local development and all Vercel deployment URLs for production.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "https://*.vercel.app",
+        "https://airbnb-web-clone-azure.vercel.app",
+        "https://airbnb-web-clone-git-main-shiivaa19s-projects.vercel.app",
+    ],
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
